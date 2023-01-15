@@ -150,6 +150,36 @@ int main(){
     }
 
 
+    int top3=3;
+
+    while(adj_matrix.size() && top3){
+    int tempMax=0;
+
+    for(int i = 0 ; i < longest.size(); ++i){
+        if(longest.at(i).second > longest.at(tempMax).second){
+            tempMax = i ; 
+        }
+    }
+
+    vector<string> currQuarter;
+
+    if(longest.size()!= 0){
+        currQuarter.push_back(classes.at(tempMax));
+    }
+
+    for(int i =0; i < adj_matrix.size(); ++i){
+        adj_matrix.at(i).erase(adj_matrix.at(i).begin() + look_for(classes,(longest.at(tempMax).first)));
+    }
+
+    adj_matrix.erase(adj_matrix.begin() + look_for(classes, longest.at(tempMax).first));
+
+    --top3;
+
+    }
+
+    print(adj_matrix);
+
+
     
     
     
