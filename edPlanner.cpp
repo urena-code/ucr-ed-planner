@@ -151,6 +151,8 @@ int main(){
 
 
     int top3=3;
+    vector<vector<string>> edPlan;
+    vector<string> currQuarter;
 
     while(adj_matrix.size() && top3){
     int tempMax=0;
@@ -161,8 +163,6 @@ int main(){
         }
     }
 
-    vector<string> currQuarter;
-
     if(longest.size()!= 0){
         currQuarter.push_back(classes.at(tempMax));
     }
@@ -172,17 +172,14 @@ int main(){
     }
 
     adj_matrix.erase(adj_matrix.begin() + look_for(classes, longest.at(tempMax).first));
-
     --top3;
-
     }
 
-    print(adj_matrix);
+    edPlan.push_back(currQuarter);
+    currQuarter.clear();
 
 
-    
-    
-    
+
 
 
 
