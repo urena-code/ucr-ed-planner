@@ -1,6 +1,8 @@
 CMakeCache.txt
-CMakeFiles/
+CMakeFiles
 Makefile
 cmake_install.cmake
 edPlanner
 todolist
+.vscode
+edPlanner.dSYM
