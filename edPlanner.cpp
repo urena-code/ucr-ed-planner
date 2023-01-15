@@ -16,19 +16,71 @@ int look_for(vector<string> classes, string goal);
 void print(vector<vector<bool> > adj_matrix);
 vector<vector<bool> > fill(vector<vector<bool> > adj_matrix, vector<string> classes, string file_name);
 
+
+vector<int> whichCoursesDontHaveParents(vector<int>& v, vector<vector<bool> >adjmat){
+
+    for(int cols =0; cols < adjmat.size();++cols){
+       int gothrurows=0;
+       while(gothrurows<adjmat.size()-1 && adjmat.at(gothrurows).at(cols)==0){
+            ++gothrurows;
+       }
+       if(adjmat.at(gothrurows).at(cols)){
+            gothrurows=0;
+       }else if(gothrurows>=v.size() && adjmat.at(gothrurows).at(cols)==0){
+            v.push_back(cols);
+       }
+    }
+
+
+    return v;
+
+}
+
+
+
+int rs(string course, vector<string> courses, vector<vector<bool> > adj_matrix){
+
+  int col=0;
+  int numRow=(look_for(courses, course));
+
+  while(col<adj_matrix.size()-1 && adj_matrix.at(numRow).at(col)==0){
+        if(col >= adj_matrix.size()-1 && adj_matrix.at(numRow).at(adj_matrix.size()) == 0){
+            return 0;
+        }
+        ++col;
+  }
+  
+    vector<int> longestFound;
+
+    for(int i = 0; i < adj_matrix.size(); ++i){
+    if(adj_matrix.at(look_for(courses, course)).at(i)==1){
+        longestFound.push_back(1+rs(courses.at(i),courses,adj_matrix));
+    }
+    }
+
+    int largest=-1;
+
+    for(int i = 0; i < longestFound.size(); ++i){
+    if(longestFound.at(i)>largest){
+        largest = longestFound.at(i); 
+    }
+    }
+
+    return largest;
+
+} 
+int longestPath(string course,vector<string> courses, vector<vector<bool> > adj_matrix){
+    
+return rs(course, courses,adj_matrix);
+
+}
+
+
+
+
+
 int main(){
-    cout << "Rosa de guadlupe is winning!" << endl;
-
-    //1->2
-
     // create list of classes with names
-    // go through file and check if class already exists in the list
-    //
-    // step 1: make matrix
-    // step 2: define edges
-    // step 3: succeed
-    //
-    //
 
     //template for other machines.
     //vector<string> classes = unique_classes("classes.txt");
@@ -49,9 +101,6 @@ int main(){
         cout << classes.at(i) << endl;
     }
 
-    //cout << "cs3: " << look_for(classes, "cs3") << endl;
-
-
     //create adj matrix
     vector<vector<bool> > adj_matrix;
     for(unsigned int i = 0; i < classes.size(); i++){
@@ -62,22 +111,55 @@ int main(){
         adj_matrix.push_back(temp);
     }
 
-
     //print adj matrix
     cout << endl;
-    cout << "PRINTING ADJ MATRIX" << endl;
-    cout << "size: " << adj_matrix.size() << endl;
 
     print(adj_matrix);
 
     adj_matrix = fill(adj_matrix, classes, pathToData);
-
     cout << endl;
-    cout << "FILLING OUT ADJ MATRIX" << endl;
-    cout << "size: " << adj_matrix.size() << endl;
 
     print(adj_matrix);
-}
+
+    vector<int> theOnesWithoutParents;
+
+    theOnesWithoutParents=whichCoursesDontHaveParents(theOnesWithoutParents,adj_matrix);
+    
+    // for(int i =0; i < theOnesWithoutParents.size();++i){
+    //     cout << classes.at(theOnesWithoutParents.at(i));
+    //     cout << longestPath(classes.at(theOnesWithoutParents.at(i)), classes, adj_matrix);
+    //     cout<<endl;
+    // }
+
+    vector<pair<string, int> > longest; 
+    
+
+    for(int i =0; i < theOnesWithoutParents.size();++i){
+        pair<string, int> temp;
+        temp.first = classes.at(theOnesWithoutParents.at(i));
+        temp.second = longestPath(classes.at(theOnesWithoutParents.at(i)), classes, adj_matrix);
+        
+        longest.push_back(temp);
+
+    }
+
+    for(int i =0; i < longest.size();++i){
+        cout << longest.at(i).first<< " ";
+        cout << longest.at(i).second;
+        cout<<endl;
+    }
+
+
+    
+    
+    
+
+
+
+}//end main 
+
+
+
 
 int look_for(vector<string> classes, string goal){
     for(unsigned int i = 0; i < classes.size(); i++){
