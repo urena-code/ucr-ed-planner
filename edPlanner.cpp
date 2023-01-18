@@ -50,7 +50,7 @@ int rs(string course, vector<string> courses, vector<vector<bool> > adj_matrix){
         ++col;
   }
   
-    vector<int> longestFound;
+   vector<int> longestFound;
 
     for(int i = 0; i < adj_matrix.size(); ++i){
     if(adj_matrix.at(look_for(courses, course)).at(i)==1){
@@ -95,11 +95,11 @@ int main(){
     int size = classes.size();
 
     cout << endl;
-    cout << "PRINTING CLASSES" << endl;
+    // cout << "PRINTING CLASSES" << endl;
 
-    for(int i = 0; i < size; i++){
-        cout << classes.at(i) << endl;
-    }
+    // for(int i = 0; i < size; i++){
+    //     cout << classes.at(i) << endl;
+    // }
 
     //create adj matrix
     vector<vector<bool> > adj_matrix;
@@ -114,74 +114,89 @@ int main(){
     //print adj matrix
     cout << endl;
 
-    print(adj_matrix);
+    //print(adj_matrix);
 
     adj_matrix = fill(adj_matrix, classes, pathToData);
     cout << endl;
 
-    print(adj_matrix);
+    //print(adj_matrix);
+
+
 
     vector<int> theOnesWithoutParents;
+    vector<vector<string> > edPlan;
 
     theOnesWithoutParents=whichCoursesDontHaveParents(theOnesWithoutParents,adj_matrix);
-    
-    // for(int i =0; i < theOnesWithoutParents.size();++i){
-    //     cout << classes.at(theOnesWithoutParents.at(i));
-    //     cout << longestPath(classes.at(theOnesWithoutParents.at(i)), classes, adj_matrix);
-    //     cout<<endl;
-    // }
+
+    while(theOnesWithoutParents.size() > 0){
 
     vector<pair<string, int> > longest; 
     
-
     for(int i =0; i < theOnesWithoutParents.size();++i){
         pair<string, int> temp;
         temp.first = classes.at(theOnesWithoutParents.at(i));
         temp.second = longestPath(classes.at(theOnesWithoutParents.at(i)), classes, adj_matrix);
         
         longest.push_back(temp);
-
     }
-
-    for(int i =0; i < longest.size();++i){
-        cout << longest.at(i).first<< " ";
-        cout << longest.at(i).second;
-        cout<<endl;
-    }
-
 
     int top3=3;
-    vector<vector<string>> edPlan;
     vector<string> currQuarter;
 
     while(adj_matrix.size() && top3){
-    int tempMax=0;
 
-    for(int i = 0 ; i < longest.size(); ++i){
+    int tempMax=0;
+    for(int i = 1 ; i < longest.size(); ++i){
         if(longest.at(i).second > longest.at(tempMax).second){
             tempMax = i ; 
         }
     }
 
     if(longest.size()!= 0){
-        currQuarter.push_back(classes.at(tempMax));
+        currQuarter.push_back((longest.at(tempMax).first));
     }
+    cout<<endl;
+    print(adj_matrix);
+    cout<<endl;
 
+    //delete cols 
+    if(longest.size() > 0){
     for(int i =0; i < adj_matrix.size(); ++i){
         adj_matrix.at(i).erase(adj_matrix.at(i).begin() + look_for(classes,(longest.at(tempMax).first)));
     }
-
+    }
+    //delete entire row
+    if(longest.size() > 0){
     adj_matrix.erase(adj_matrix.begin() + look_for(classes, longest.at(tempMax).first));
+    }
+
+    //delete from all classes 
+    if(longest.size() > 0){
+    classes.erase(classes.begin() + look_for(classes,longest.at(tempMax).first));
+    }
+
+    //delete from longest
+    if(longest.size() > 0){
+    longest.erase(longest.begin() + tempMax);
+    }
+    print(adj_matrix);
+
     --top3;
     }
 
     edPlan.push_back(currQuarter);
     currQuarter.clear();
+    theOnesWithoutParents.clear();
+    theOnesWithoutParents=whichCoursesDontHaveParents(theOnesWithoutParents,adj_matrix);
+    }
 
-
-
-
-
+    for(int i =0 ; i < edPlan.size(); ++i){
+        cout << "QUARTER " << i+1 <<endl;
+        cout << "================="  <<endl;
+        for(int j =0 ; j < edPlan.at(i).size() ; ++j){
+            cout<<edPlan.at(i).at(j) << endl;
+        }
+    }
 
 }//end main 
 
