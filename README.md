@@ -6,4 +6,4 @@ This project was made by Luis Urena, Marisol De Los Santos Lopez, and David Jord
 
 Courses input is in the "courses"
 
-The path in the main.cpp needs to be updated - is computer dependent. 
+The path in the main.cpp needs to be updated to input the course data as it is computer dependent. 
